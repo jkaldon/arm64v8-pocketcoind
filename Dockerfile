@@ -72,7 +72,11 @@ COPY --from=build /usr/local/src/pocketcoin/depends/aarch64-unknown-linux-gnu/ /
 
 RUN \
   apt-get update && \
-  apt-get install -y python3 && \
+  apt-get install -y \
+    python3 \
+    net-tools \
+    procps \
+    less && \
   useradd -d /home/pocketcoin -m -s /usr/sbin/nologin pocketcoin && \
   mkdir /data && \
   chown -R pocketcoin.pocketcoin /data

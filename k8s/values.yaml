@@ -10,7 +10,7 @@ image:
   repository: jkaldon/arm64v8-pocketcoind
   pullPolicy: IfNotPresent
   # Overrides the image tag whose default is the chart appVersion.
-  tag: "0.20.19-3"
+  tag: "0.20.19-4"
   lifecycle:
     preStop:
       exec:
