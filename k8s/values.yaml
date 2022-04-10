@@ -1,0 +1,102 @@
+# Default values for arm64v8-pocketcoind
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+replicaCount: 1
+
+terminationGracePeriodSeconds: 300
+
+image:
+  repository: jkaldon/arm64v8-pocketcoind
+  pullPolicy: IfNotPresent
+  # Overrides the image tag whose default is the chart appVersion.
+  tag: "0.20.19-3"
+  lifecycle:
+    preStop:
+      exec:
+        command: ["/usr/local/bin/pocketcoin-cli", "stop"]
+  resources:
+    requests:
+      cpu: 1000m
+      memory: 2Gi
+    limits:
+      cpu: 2000m
+      memory: 3Gi
+
+#initEnv:
+#- name: RPC_USERNAME
+#  value: admin
+#- name: RPC_PASSWORD
+#  value: your_secret_password
+
+persistence:
+  enabled: true
+  ## A manually managed Persistent Volume and Claim
+  ## Requires persistence.enabled: true
+  ## If defined, PVC must be created manually before volume will be bound
+  existingClaim:
+  ## jenkins data Persistent Volume Storage Class
+  ## If defined, storageClassName: <storageClass>
+  ## If set to "-", storageClassName: "", which disables dynamic provisioning
+  ## If undefined (the default) or set to null, no storageClassName spec is
+  ##   set, choosing the default provisioner.  (gp2 on AWS, standard on
+  ##   GKE, AWS & OpenStack)
+  ##
+  storageClass: nfs-client
+  annotations: {}
+  accessMode: "ReadWriteOnce"
+  size: "8Gi"
+  volumes:
+  - name: pocketcoin-data
+    persistentVolumeClaim:
+      claimName: pocketcoind
+  mounts:
+  - name: pocketcoin-data
+    mountPath: /data
+    readOnly: false
+
+imagePullSecrets: []
+nameOverride: ""
+fullnameOverride: ""
+
+serviceAccount:
+  # Specifies whether a service account should be created
+  create: true
+  # Annotations to add to the service account
+  annotations: {}
+  # The name of the service account to use.
+  # If not set and create is true, a name is generated using the fullname template
+  name: ""
+
+podAnnotations: {}
+
+podSecurityContext:
+  fsGroup: 1000
+
+securityContext:
+  capabilities:
+    drop:
+    - ALL
+  # readOnlyRootFilesystem: true
+  # runAsNonRoot: true
+  # runAsUser: 1000
+
+service:
+  type: LoadBalancer
+  ports:
+    - port: 37071
+      targetPort: 37071
+      protocol: TCP
+      name: rpc
+    - port: 37070
+      targetPort: 37070
+      protocol: TCP
+      name: p2p
+    - port: 28332
+      targetPort: 28332
+      protocol: TCP
+      name: rpc-zmq
+    - port: 28333
+      targetPort: 28333
+      protocol: TCP
+      name: p2p-zmq
