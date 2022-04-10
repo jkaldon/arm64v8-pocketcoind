@@ -37,6 +37,11 @@ RUN \
 # this is the "build" stage of a multistage dockerfile,
 # I don't believe it makes a huge difference in the
 # resulting docker image's layers.
+
+# The sed commands below address a missing dependency archive
+# that was previously hosted on zlib.net.  Increasing the minor
+# version by 1 and updating the hash allowed it to build as 
+# expected.  This should be removed in a future version.
 RUN \
   cd /usr/local/src/pocketcoin/depends && \
   sed -i 's/_version=1\.2\.11/_version=1.2.12/' packages/zlib.mk && \
