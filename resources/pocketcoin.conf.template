@@ -27,3 +27,7 @@ maxuploadtarget=5000
 
 # Initial block download optimizations
 dbcache=2000
+
+# SQLLite3 settings to increase cache to 80 MB and utilize a shared cache.
+sqlcachesize=80
+sqlsharedcache=1
